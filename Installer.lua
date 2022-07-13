@@ -57,7 +57,7 @@ local function Import(obj,objName,parent,path)
         ModuleScript.Name = objName
         ModuleScript.Parent = parent
 
-        ModuleScript.Source = GetAsync(RawUrl..path)
+        ModuleScript.Source = GetAsync(RawUrl..path..".lua")
 
         if #obj.Children > 0 then
             for k,v in pairs(obj.Children) do
