@@ -80,11 +80,9 @@ DataTree = HttpService:JSONDecode(DataTree)
 warn("Downloaded data tree, starting installation.")
 
 for k,v in pairs(DataTree) do
-    if type(v) ~= table then
-        continue
+    if k ~= "Version" then
+        Import(v,k,InstallLocation,"")
     end
-
-    Import(v,k,InstallLocation,"")
 end
 
 warn(("Install complete, time taken: %s."):format(tick()-start))
