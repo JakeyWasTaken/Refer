@@ -1,4 +1,4 @@
-local RawUrl = "raw.githubusercontent.com/JakeyWasTaken/Refer/main/src/"
+local RawUrl = "raw.githubusercontent.com/JakeyWasTaken/Refer/main/src"
 local InstallLocation = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
@@ -21,8 +21,6 @@ local function GetAsync(url)
 end
 
 local function Import(obj,objName,parent,path)
-    warn(("Importing %s of type %s into %s, path: %s"):format(objName,obj.Type,parent.Name,RawUrl..path))
-
     if obj.Type == "Folder" then
         local Folder = Instance.new("Folder")
         Folder.Name = objName
@@ -33,7 +31,7 @@ local function Import(obj,objName,parent,path)
         local newPath = ""
 
         for _,p in ipairs(pathSplit) do
-            if p == "Refer" then
+            if p == "Refer" or p == "" then
                 continue
             end
 
@@ -42,14 +40,13 @@ local function Import(obj,objName,parent,path)
 
         newPath = string.sub(newPath,1,#newPath-1)
         
-
-        if #obj.Children > 0 then
-            for k,v in pairs(obj.Children) do
-                Import(v,k,Folder,newPath.."/"..objName)
-            end
+        newPath = newPath.."/"..objName
+        
+        path = newPath
+        
+        for k,v in pairs(obj.Children) do
+            Import(v,k,Folder,path)
         end
-
-        return true
     end
 
     if obj.Type == "ModuleScript" then
@@ -57,27 +54,27 @@ local function Import(obj,objName,parent,path)
         ModuleScript.Name = objName
         ModuleScript.Parent = parent
 
-        ModuleScript.Source = GetAsync(RawUrl..path..".lua")
+        path = RawUrl..path.."/"..objName..".lua"
 
-        if #obj.Children > 0 then
-            for k,v in pairs(obj.Children) do
-                Import(v,k,ModuleScript,path.."/"..objName)
-            end
+        ModuleScript.Source = GetAsync(path)
+
+        for k,v in pairs(obj.Children) do
+            Import(v,k,ModuleScript,path)
         end
-
-        return true
     end
+
+    print(("Importing %s of type %s into %s, path: %s"):format(objName,obj.Type,parent.Name,path))
 end
 
 local start = tick()
 
-local DataTree = GetAsync(string.sub(RawUrl,1,#RawUrl-4).."datatree.json")
+local DataTree = GetAsync(string.sub(RawUrl,1,#RawUrl-3).."/datatree.json")
 DataTree = HttpService:JSONDecode(DataTree)
 
 warn("Downloaded data tree, starting installation.")
 
 for k,v in pairs(DataTree) do
-    Import(v,k,InstallLocation,k)
+    Import(v,k,InstallLocation,"")
 end
 
 warn(("Install complete, time taken: %s."):format(tick()-start))

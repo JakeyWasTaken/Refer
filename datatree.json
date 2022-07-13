@@ -2,7 +2,12 @@
     "Refer":{
         "Children":{
             "Utils":{
-                "Children":[],
+                "Children":{
+                    "testmodule":{
+                        "Children":[],
+                        "Type":"ModuleScript"
+                    }
+                },
                 "Type":"Folder"
             }
         },
