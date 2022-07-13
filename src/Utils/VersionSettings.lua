@@ -1,1 +1,3 @@
-warn("test script")
+return {
+    Version = "1.0.0"
+}
