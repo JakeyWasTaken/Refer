@@ -3,7 +3,7 @@
         "Children":{
             "Utils":{
                 "Children":{
-                    "testmodule":{
+                    "VersionSettings":{
                         "Children":[],
                         "Type":"ModuleScript"
                     }
