@@ -1,15 +1,12 @@
-local RawUrl = "https://raw.githubusercontent.com/JakeyWasTaken/Refer/main/src/"
+local RawUrl = "raw.githubusercontent.com/JakeyWasTaken/Refer/main/src/"
 local InstallLocation = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 HttpService.HttpEnabled = true;
 
-local DataTree = HttpService:GetAsync(RawUrl.."datatree.json")
-DataTree = HttpService:JSONDecode(DataTree)
-
-warn("Downloaded data tree, starting installation.")
-
 local function GetAsync(url)
+    url = "https://"..url
+
     local rt
     local s,e = pcall(function()
         rt = HttpService:GetAsync(url)
@@ -32,9 +29,23 @@ local function Import(obj,objName,parent,path)
 
         Folder.Parent = parent
 
+        local pathSplit = string.split(path,"/")
+        local newPath = ""
+
+        for _,p in ipairs(pathSplit) do
+            if p == "Refer" then
+                continue
+            end
+
+            newPath = newPath..p.."/"
+        end
+
+        newPath = string.sub(newPath,1,#newPath-1)
+        
+
         if #obj.Children > 0 then
             for k,v in pairs(obj.Children) do
-                Import(v,k,Folder,path.."/"..objName)
+                Import(v,k,Folder,newPath.."/"..objName)
             end
         end
 
@@ -60,8 +71,13 @@ end
 
 local start = tick()
 
+local DataTree = GetAsync(string.sub(RawUrl,1,#RawUrl-4).."datatree.json")
+DataTree = HttpService:JSONDecode(DataTree)
+
+warn("Downloaded data tree, starting installation.")
+
 for k,v in pairs(DataTree) do
-    Import(v,k,InstallLocation,"")
+    Import(v,k,InstallLocation,k)
 end
 
 warn(("Install complete, time taken: %s."):format(tick()-start))
