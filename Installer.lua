@@ -1,5 +1,5 @@
 local RawUrl = "raw.githubusercontent.com/JakeyWasTaken/Refer/main/src"
-local InstallLocation = game:GetService("ReplicatedStorage")
+local InstallLocation = game:GetService("ServerScriptService")
 local HttpService = game:GetService("HttpService")
 
 HttpService.HttpEnabled = true;
