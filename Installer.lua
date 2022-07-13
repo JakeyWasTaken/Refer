@@ -31,16 +31,18 @@ local function Import(obj,objName,parent,path)
         local newPath = ""
 
         for _,p in ipairs(pathSplit) do
-            if p == "Refer" or p == "" then
+            if p == "Refer.lua" or p == "" then
                 continue
             end
 
             newPath = newPath..p.."/"
         end
-
-        newPath = string.sub(newPath,1,#newPath-1)
         
-        newPath = newPath.."/"..objName
+        if string.sub(newPath,#newPath,#newPath) ~= "/" then
+            newPath = newPath.."/"..objName
+        else
+            newPath = newPath..objName
+        end
         
         path = newPath
         
@@ -54,16 +56,18 @@ local function Import(obj,objName,parent,path)
         ModuleScript.Name = objName
         ModuleScript.Parent = parent
 
-        path = RawUrl..path.."/"..objName..".lua"
+        path = path.."/"..objName..".lua"
 
-        ModuleScript.Source = GetAsync(path)
+        ModuleScript.Source = GetAsync(RawUrl..path)
 
         for k,v in pairs(obj.Children) do
             Import(v,k,ModuleScript,path)
         end
+
+        path = RawUrl..path
     end
 
-    print(("Importing %s of type %s into %s, path: %s"):format(objName,obj.Type,parent.Name,path))
+    print(("Imported %s of type %s into %s, path: %s"):format(objName,obj.Type,parent.Name,path))
 end
 
 local start = tick()
