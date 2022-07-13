@@ -49,6 +49,8 @@ local function Import(obj,objName,parent,path)
         for k,v in pairs(obj.Children) do
             Import(v,k,Folder,path)
         end
+
+        path = RawUrl..path
     end
 
     if obj.Type == "ModuleScript" then
