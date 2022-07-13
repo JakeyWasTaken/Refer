@@ -1,8 +1,70 @@
-local RawUrl = "raw.githubusercontent.com/JakeyWasTaken/Refer/main/src"
+local RawUrl = "github.com/JakeyWasTaken/Refer/tree/main/src"
 local InstallLocation = game:GetService("ServerScriptService")
 local HttpService = game:GetService("HttpService")
 
 HttpService.HttpEnabled = true;
+
+local corrections = {
+	["&quot;"] = '"', ["&amp;"] = "&", ["&#39;"] = "'", ["&lt;"] = "<", ["&gt;"] = ">",
+	["Ã¢â€šÂ¬"] = "€", ["Ã‚Â"] = "", ["Ã¢â‚¬Å¡"] = "‚", ["Ã†â€™"] = "ƒ",
+	["Ã¢â‚¬Å¾"] = "„", ["Ã¢â‚¬Â¦"] = "…", ["Ã¢â‚¬Â "] = "†", ["Ã¢â‚¬Â¡"] = "‡",
+	["Ã‹â€ "] = "ˆ", ["Ã¢â‚¬Â°"] = "‰", ["Ã…Â "] = "Š", ["Ã¢â‚¬Â¹"] = "‹",
+	["Ã…â€™"] = "Œ", ["Ã‚Â"] = "", ["Ã…Â½"] = "Ž", ["Ã‚Â"] = "",
+	["Ã‚Â"] = "", ["Ã¢â‚¬Ëœ"] = "‘", ["Ã¢â‚¬â„¢"] = "’", ["Ã¢â‚¬Å“"] = "“",
+	["Ã¢â‚¬Â"] = "”", ["Ã¢â‚¬Â¢"] = "•", ["Ã¢â‚¬â€œ"] = "–", ["Ã¢â‚¬â€"] = "—",
+	["Ã‹Å“"] = "˜", ["Ã¢â€žÂ¢"] = "™", ["Ã…Â¡"] = "š", ["Ã¢â‚¬Âº"] = "›",
+	["Ã…â€œ"] = "œ", ["Ã‚Â"] = "", ["Ã…Â¾"] = "ž", ["Ã…Â¸"] = "Ÿ",
+	["Ã‚Â "] = " ", ["Ã‚Â¡"] = "¡", ["Ã‚Â¢"] = "¢", ["Ã‚Â£"] = "£",
+	["Ã‚Â¤"] = "¤", ["Ã‚Â¥"] = "¥", ["Ã‚Â¦"] = "¦", ["Ã‚Â§"] = "§",
+	["Ã‚Â¨"] = "¨", ["Ã‚Â©"] = "©", ["Ã‚Âª"] = "ª", ["Ã‚Â«"] = "«",
+	["Ã‚Â¬"] = "¬", ["Ã‚Â­"] = "­", ["Ã‚Â®"] = "®", ["Ã‚Â¯"] = "¯",
+	["Ã‚Â°"] = "°", ["Ã‚Â±"] = "±", ["Ã‚Â²"] = "²", ["Ã‚Â³"] = "³",
+	["Ã‚Â´"] = "´", ["Ã‚Âµ"] = "µ", ["Ã‚Â¶"] = "¶", ["Ã‚Â·"] = "·",
+	["Ã‚Â¸"] = "¸", ["Ã‚Â¹"] = "¹", ["Ã‚Âº"] = "º", ["Ã‚Â»"] = "»",
+	["Ã‚Â¼"] = "¼", ["Ã‚Â½"] = "½", ["Ã‚Â¾"] = "¾", ["Ã‚Â¿"] = "¿",
+	["Ãƒâ‚¬"] = "À", ["ÃƒÂ"] = "Á", ["Ãƒâ€š"] = "Â", ["ÃƒÆ’"] = "Ã",
+	["Ãƒâ€ž"] = "Ä", ["Ãƒâ€¦"] = "Å", ["Ãƒâ€ "] = "Æ", ["Ãƒâ€¡"] = "Ç",
+	["ÃƒË†"] = "È", ["Ãƒâ€°"] = "É", ["ÃƒÅ "] = "Ê", ["Ãƒâ€¹"] = "Ë",
+	["ÃƒÅ’"] = "Ì", ["ÃƒÂ"] = "Í", ["ÃƒÅ½"] = "Î", ["ÃƒÂ"] = "Ï",
+	["ÃƒÂ"] = "Ð", ["Ãƒâ€˜"] = "Ñ", ["Ãƒâ€™"] = "Ò", ["Ãƒâ€œ"] = "Ó",
+	["Ãƒâ€"] = "Ô", ["Ãƒâ€¢"] = "Õ", ["Ãƒâ€“"] = "Ö", ["Ãƒâ€”"] = "×",
+	["ÃƒËœ"] = "Ø", ["Ãƒâ„¢"] = "Ù", ["ÃƒÅ¡"] = "Ú", ["Ãƒâ€º"] = "Û",
+	["ÃƒÅ“"] = "Ü", ["ÃƒÂ"] = "Ý", ["ÃƒÅ¾"] = "Þ", ["ÃƒÅ¸"] = "ß",
+	["ÃƒÂ "] = "à", ["ÃƒÂ¡"] = "á", ["ÃƒÂ¢"] = "â", ["ÃƒÂ£"] = "ã",
+	["ÃƒÂ¤"] = "ä", ["ÃƒÂ¥"] = "å", ["ÃƒÂ¦"] = "æ", ["ÃƒÂ§"] = "ç",
+	["ÃƒÂ¨"] = "è", ["ÃƒÂ©"] = "é", ["ÃƒÂª"] = "ê", ["ÃƒÂ«"] = "ë",
+	["ÃƒÂ¬"] = "ì", ["ÃƒÂ­"] = "í", ["ÃƒÂ®"] = "î", ["ÃƒÂ¯"] = "ï",
+	["ÃƒÂ°"] = "ð", ["ÃƒÂ±"] = "ñ", ["ÃƒÂ²"] = "ò", ["ÃƒÂ³"] = "ó",
+	["ÃƒÂ´"] = "ô", ["ÃƒÂµ"] = "õ", ["ÃƒÂ¶"] = "ö", ["ÃƒÂ·"] = "÷",
+	["ÃƒÂ¸"] = "ø", ["ÃƒÂ¹"] = "ù", ["ÃƒÂº"] = "ú", ["ÃƒÂ»"] = "û",
+	["ÃƒÂ¼"] = "ü", ["ÃƒÂ½"] = "ý", ["ÃƒÂ¾"] = "þ", ["ÃƒÂ¿"] = "ÿ",
+}
+
+local function getScriptFromHtml(script)
+    local lines = script and type(script) == "string" and script:split("        <tr>\n")
+    if lines then
+        table.remove(lines, 1)
+        local codeLines = {}
+        
+        for _, line in ipairs(lines) do
+            local lineOfCode = line:split("\n")[2]
+            local currentLine = ""
+
+            if lineOfCode then
+                for code, _ in lineOfCode:gmatch(">(.-)<") do
+                    for find, replace in pairs(corrections) do
+                        code = code:gsub(find, replace)
+                    end
+
+                    currentLine = currentLine .. code
+                end
+            end
+            table.insert(codeLines, currentLine)
+        end
+
+        return table.concat(codeLines, "\n")
+    end
+end
 
 local function GetAsync(url)
     url = "https://"..url
@@ -13,7 +75,7 @@ local function GetAsync(url)
     end)
 
     if s then
-        return rt
+        return getScriptFromHtml(rt)
     else
         warn(e)
         warn(url)
@@ -21,6 +83,8 @@ local function GetAsync(url)
 end
 
 local function Import(obj,objName,parent,path)
+    task.wait(0.1) -- slow down rate of download
+
     if obj.Type == "Folder" then
         local Folder = Instance.new("Folder")
         Folder.Name = objName
