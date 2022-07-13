@@ -2,12 +2,20 @@
     "Refer":{
         "Children":{
             "Utils":{
+                "Children":[],
+                "Type":"Folder"
+            },
+            "Private":{
                 "Children":{
                     "VersionSettings":{
                         "Children":[],
                         "Type":"ModuleScript"
                     }
                 },
+                "Type":"Folder"
+            },
+            "Services":{
+                "Children":[],
                 "Type":"Folder"
             }
         },
