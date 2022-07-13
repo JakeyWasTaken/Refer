@@ -9,6 +9,20 @@ DataTree = HttpService:JSONDecode(DataTree)
 
 warn("Downloaded data tree, starting installation.")
 
+local function GetAsync(url)
+    local rt
+    local s,e = pcall(function()
+        rt = HttpService:GetAsync(url)
+    end)
+
+    if s then
+        return rt
+    else
+        warn(e)
+        warn(url)
+    end
+end
+
 local function Import(obj,objName,parent,path)
     warn(("Importing %s of type %s into %s, path: %s"):format(objName,obj.Type,parent.Name,RawUrl..path))
 
@@ -32,7 +46,7 @@ local function Import(obj,objName,parent,path)
         ModuleScript.Name = objName
         ModuleScript.Parent = parent
 
-        ModuleScript.Source = HttpService:GetAsync(RawUrl..path)
+        ModuleScript.Source = GetAsync(RawUrl..path)
 
         if #obj.Children > 0 then
             for k,v in pairs(obj.Children) do
