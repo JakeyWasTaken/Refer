@@ -2,6 +2,8 @@ local RawUrl = "https://raw.githubusercontent.com/JakeyWasTaken/Refer/main/src/"
 local InstallLocation = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
+HttpService.HttpEnabled = true;
+
 local DataTree = HttpService:GetAsync(RawUrl.."datatree.json")
 DataTree = HttpService:JSONDecode(DataTree)
 
