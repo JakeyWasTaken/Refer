@@ -80,6 +80,10 @@ DataTree = HttpService:JSONDecode(DataTree)
 warn("Downloaded data tree, starting installation.")
 
 for k,v in pairs(DataTree) do
+    if type(v) ~= table then
+        continue
+    end
+
     Import(v,k,InstallLocation,"")
 end
 
