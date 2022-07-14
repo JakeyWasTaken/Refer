@@ -46,9 +46,7 @@ local function CacheServices()
     Services.Parent = game:GetService("ServerStorage")
 end
 
-VersionCheck()
-CacheUtils()
-CacheServices()
+
 
 local Refer = {
     ["Utils"] = UtilCache,
@@ -56,6 +54,10 @@ local Refer = {
     ["SharedServices"] = SharedServiceCache
 }
 _G.Refer = Refer
+
+VersionCheck()
+CacheUtils()
+CacheServices()
 
     Refer.Import = function(Name : string) : table
         assert(UtilCache[Name],("[Refer] Cannot find util of name %s"):format(Name))
