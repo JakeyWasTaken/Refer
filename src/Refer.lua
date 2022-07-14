@@ -2,11 +2,13 @@ local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
 local Utils = script:WaitForChild("Utils")
 local Private = script:WaitForChild("Private")
-local Services = script:WaitForChild("Services")
+local Services = (if RunService:IsServer() then script:WaitForChild("Services") else nil)
+local SharedServices = script:WaitForChild("SharedServices")
 
 local VersionSettings = require(Private:WaitForChild("VersionSettings"))
 local UtilCache = {}
 local ServiceCache = {}
+local SharedServiceCache = {}
 
 local function VersionCheck()
     if RunService:IsClient() then -- Prevent client running version check
@@ -28,16 +30,32 @@ local function CacheUtils()
 end
 
 local function CacheServices()
+
+    for _,Service in ipairs(SharedServices:GetChildren()) do
+        SharedServiceCache[Service.Name] = require(Service)
+    end
+
+    if RunService:IsClient() then
+        return
+    end
+
     for _,Service in ipairs(Services:GetChildren()) do
         ServiceCache[Service.Name] = require(Service)
     end
+
+    Services.Parent = game:GetService("ServerStorage")
 end
 
 VersionCheck()
 CacheUtils()
 CacheServices()
 
-local Refer = {}
+local Refer = {
+    ["Utils"] = UtilCache,
+    ["Services"] = ServiceCache,
+    ["SharedServices"] = SharedServiceCache
+}
+_G.Refer = Refer
 
     Refer.Import = function(Name : string) : table
         assert(UtilCache[Name],("[Refer] Cannot find util of name %s"):format(Name))
@@ -45,10 +63,16 @@ local Refer = {}
         return UtilCache[Name]
     end
 
-    Refer.GetService = function(Name : string) : table
-        assert(ServiceCache[Name],("[Refer] Cannot find service of name %s"):format(Name))
+    Refer.GetService = function(Name : string , UsedShared : boolean?) : table
+        if UsedShared or RunService:IsClient() then
+            assert(SharedServiceCache[Name],("[Refer] Cannot find service of name %s"):format(Name))
 
-        return ServiceCache[Name]
+            return SharedServiceCache[Name]
+        elseif RunService:IsServer() then
+            assert(ServiceCache[Name],("[Refer] Cannot find service of name %s"):format(Name))
+
+            return ServiceCache[Name]
+        end
     end
 
 return Refer

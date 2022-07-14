@@ -6,6 +6,22 @@
                     "Maid":{
                         "Children":[],
                         "Type":"ModuleScript"
+                    },
+                    "MathPlus":{
+                        "Children":[],
+                        "Type":"ModuleScript"
+                    },
+                    "Signal":{
+                        "Children":[],
+                        "Type":"ModuleScript"
+                    },
+                    "Spring":{
+                        "Children":[],
+                        "Type":"ModuleScript"
+                    },
+                    "Stack":{
+                        "Children":[],
+                        "Type":"ModuleScript"
                     }
                 },
                 "Type":"Folder"
@@ -30,5 +46,5 @@
         },
         "Type":"ModuleScript"
     },
-    "Version":"1.0.1"
+    "Version":"2.0.0"
 }   
