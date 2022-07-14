@@ -2,7 +2,12 @@
     "Refer":{
         "Children":{
             "Utils":{
-                "Children":[],
+                "Children":{
+                    "Maid":{
+                        "Children":[],
+                        "Type":"ModuleScript"
+                    }
+                },
                 "Type":"Folder"
             },
             "Private":{
@@ -15,6 +20,10 @@
                 "Type":"Folder"
             },
             "Services":{
+                "Children":[],
+                "Type":"Folder"
+            },
+            "SharedServices":{
                 "Children":[],
                 "Type":"Folder"
             }
