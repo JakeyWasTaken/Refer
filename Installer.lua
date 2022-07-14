@@ -83,7 +83,7 @@ local function GetAsync(url)
 end
 
 local function Import(obj,objName,parent,path)
-    task.wait(0.1) -- slow down rate of download
+    task.wait(0.05) -- slow down rate of download
 
     if obj.Type == "Folder" then
         local Folder = Instance.new("Folder")
