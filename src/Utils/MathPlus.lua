@@ -71,4 +71,8 @@ function MathPlus.NumberToClockTime(number)
 	return ("%02d:%02d"):format(minutes, seconds)
 end
 
+function MathPlus.Reflect(Direction : Vector3 ,Normal : Vector3) : Vector3
+	return Direction - (2 * Direction:Dot(Normal) * Normal)
+end
+
 return MathPlus
