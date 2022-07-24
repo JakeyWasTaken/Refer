@@ -1,8 +1,12 @@
 local RawUrl = "github.com/JakeyWasTaken/Refer/tree/main/src"
-local InstallLocation = game:GetService("ServerScriptService")
+local InstallLocation = game:GetService("ReplicatedStorage")
 local HttpService = game:GetService("HttpService")
 
 HttpService.HttpEnabled = true;
+
+if InstallLocation:FindFirstChild("Refer") then
+    InstallLocation:FindFirstChild("Refer").Name = "Old_Refer"
+end
 
 local corrections = {
 	["&quot;"] = '"', ["&amp;"] = "&", ["&#39;"] = "'", ["&lt;"] = "<", ["&gt;"] = ">",
