@@ -75,4 +75,18 @@ function MathPlus.Reflect(Direction : Vector3 ,Normal : Vector3) : Vector3
 	return Direction - (2 * Direction:Dot(Normal) * Normal)
 end
 
+MathPlus.Vector3 = {
+	floor = function(v)
+		return Vector3.new(math.floor(v.X),math.floor(v.Y),math.floor(v.Z))
+	end,
+
+	clamp = function(v,a,b)
+		return Vector3.new(math.clamp(v.X,a,b),math.clamp(v.Y,a,b),math.clamp(v.Z,a,b))
+	end,
+
+	huge = function()
+		return Vector3.new(math.huge,math.huge,math.huge)
+	end,
+}
+
 return MathPlus
