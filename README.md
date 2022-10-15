@@ -2,7 +2,7 @@
 Light weight useful scripting framework with built in installer
 
 ## Installation
-**THIS README MIGHT BE OUT OF DATE, BE SURE TO DOUBLE EDITS YOU MAKE**<br>
+**THIS README MIGHT BE OUT OF DATE, BE SURE TO DOUBLE CHECK EDITS YOU MAKE**<br>
 
 **Method 1:**<br>
 Copy installer code [here](https://raw.githubusercontent.com/JakeyWasTaken/Refer/main/Installer.lua)<br>
