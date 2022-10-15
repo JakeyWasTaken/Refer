@@ -27,17 +27,29 @@ Refer can be used on the client or the server.<br>
 **To import a util**<br>
 You first need to require Refer
 
-![image](https://user-images.githubusercontent.com/75340712/195960826-852a2aa3-ea83-4b32-8565-2b064e251cfa.png)<br>
+```lua
+local Refer = require(script.Parent:WaitForChild("Refer"))
+```
 
 
 Then you can call ```Refer.Import(UtilName)```, now be sure you have put the utils in the "Utils" folder <br>
 ![image](https://user-images.githubusercontent.com/75340712/195959999-0d8ecd92-3106-4504-b431-a5b7f299f0be.png)
-![image](https://user-images.githubusercontent.com/75340712/195960376-76d1d5a7-bebb-4df9-b803-25f4eee92682.png)
+```lua
+local Refer = require(script.Parent:WaitForChild("Refer"))
+
+local MyUtil = Refer.Import("MyUtil")
+```
 
 
 Refer also has service capability, you can put the services in either *SharedServices* or *Services* you can use ```Refer.GetService(ServiceName)``` to index them<br>
 (Possible unexpected behaviour, the client only reads from the SharedServices folder, the server can read from both)
-![image](https://user-images.githubusercontent.com/75340712/195960384-de976655-70af-46e2-b97f-6f5f0b8f1f7d.png)
+```lua
+local Refer = require(script.Parent:WaitForChild("Refer"))
+
+local MyUtil = Refer.Import("MyUtil")
+local MyService = Refer.GetService("MySharedService") -- Client implementation
+local MyService = Refer.GetService("MySharedService",true) -- Server implementation
+```
 
 
 
@@ -45,7 +57,21 @@ Refer also has service capability, you can put the services in either *SharedSer
 
 Refer also puts itself in global variables this means that if needed utils can index other utils using Refer via ```_G.Refer.Import(UtilName)```,<br>
 however use of _G isn't recommended therefore you should try avoid this by passing Refer into the util.<br>
-![image](https://user-images.githubusercontent.com/75340712/195960499-4c50d8d8-a836-4bda-b84c-31081d22af0b.png)
+```lua
+local MyUtil = {}
+MyUtil.__index = MyUtil
+
+	function MyUtil.new(Refer)
+		local self = setmetatable({},MyUtil)
+		
+		self.Refer = Refer
+		self.TheBestUtil = Refer.Import("TheBestUtil")
+		
+		return self
+	end
+
+return MyUtil
+```
 
 
 ## Overview
@@ -60,8 +86,23 @@ Refer comes packaged with 6 utils by default:<br>
 All respective credits are in each script at line 1<br>
 
 Refer will notify you if it thinks it is out of date, to remove this you need to open the main Refer module and delete these:<br>
-![image](https://user-images.githubusercontent.com/75340712/195960609-29b7e917-7d13-45ba-8e71-ac464fde8f96.png)<br>
-![image](https://user-images.githubusercontent.com/75340712/195960616-623d064a-30f3-430a-84cf-43aa62ad2116.png)<br>
+```lua
+local function VersionCheck()
+    if RunService:IsClient() then -- Prevent client running version check
+        return
+    end
+
+    local DataTree = HttpService:GetAsync("https://raw.githubusercontent.com/JakeyWasTaken/Refer/main/datatree.json")
+    DataTree = HttpService:JSONDecode(DataTree)
+
+    if DataTree.Version ~= VersionSettings.Version then
+        warn(("Refer is not at the latest version, consider updating to version %s (Current version: %s)"):format(DataTree.Version,VersionSettings.Version))
+    end
+end
+```
+```lua
+VersionCheck()
+```
 
 Lines: (This might be out of date so be sure to check)<br>
 13,<br>
