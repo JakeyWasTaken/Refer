@@ -5,7 +5,7 @@ Light weight useful scripting framework with built in installer
 **THIS README MIGHT BE OUT OF DATE, BE SURE TO DOUBLE EDITS YOU MAKE**<br>
 
 **Method 1:**<br>
-Copy installer code [here](Refer/Installer.lua)<br>
+Copy installer code [here](https://raw.githubusercontent.com/JakeyWasTaken/Refer/main/Installer.lua)<br>
 Paste into roblox studio command line and run<br>
 Should be downloaded within 5-6 seconds (Varys depending on internet speed)<br>
 
