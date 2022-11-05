@@ -9,6 +9,7 @@ local VersionSettings = require(Private:WaitForChild("VersionSettings"))
 local UtilCache = {}
 local ServiceCache = {}
 local SharedServiceCache = {}
+local _LOADTABLE = {}
 
 local function VersionCheck()
     if RunService:IsClient() then -- Prevent client running version check
@@ -24,9 +25,17 @@ local function VersionCheck()
 end
 
 local function CacheUtils()
-    for _,Util in ipairs(Utils:GetChildren()) do
-        UtilCache[Util.Name] = require(Util)
-    end
+	for _,Util in ipairs(Utils:GetDescendants()) do
+		if not Util:IsA("ModuleScript") then continue end
+		
+		if Util.Parent ~= Utils then
+			UtilCache[Util.Name.."||"..Util.Parent.Name] = require(Util)
+		else
+			UtilCache[Util.Name] = require(Util)
+		end
+	end
+	
+	table.insert(_LOADTABLE,1)
 end
 
 local function CacheServices()
@@ -35,7 +44,8 @@ local function CacheServices()
         SharedServiceCache[Service.Name] = require(Service)
     end
 
-    if RunService:IsClient() then
+	if RunService:IsClient() then
+		table.insert(_LOADTABLE,1)
         return
     end
 
@@ -43,7 +53,8 @@ local function CacheServices()
         ServiceCache[Service.Name] = require(Service)
     end
 
-    Services.Parent = game:GetService("ServerStorage")
+	Services.Parent = game:GetService("ServerStorage")
+	table.insert(_LOADTABLE,1)
 end
 
 
@@ -59,7 +70,13 @@ VersionCheck()
 CacheUtils()
 CacheServices()
 
-    Refer.Import = function(Name : string) : table
+	Refer.Import = function(Name : string,Folder : string?) : table
+		if Folder then
+			assert(UtilCache[Name.."||"..Folder],("[Refer] Cannot find util of name %s in %s"):format(Name,Folder))
+
+			return UtilCache[Name.."||"..Folder]
+		end
+
         assert(UtilCache[Name],("[Refer] Cannot find util of name %s"):format(Name))
 
         return UtilCache[Name]
@@ -75,6 +92,14 @@ CacheServices()
 
             return ServiceCache[Name]
         end
-    end
+	end
+	
+	Refer.IsLoaded = function()
+		if #_LOADTABLE >= 2 then
+			return true
+		else
+			return false
+		end
+	end
 
 return Refer
