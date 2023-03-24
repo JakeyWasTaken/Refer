@@ -1,3 +1,5 @@
+# Refer is no longer updated nor patched for any bugs.
+
 # Refer
 Light weight useful scripting framework with built in installer
 
